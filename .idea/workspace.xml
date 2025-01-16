@@ -4,7 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fef7315d-0145-4cc1-943c-93949e2b51bc" name="Changes" comment="Added state api" />
+    <list default="true" id="fef7315d-0145-4cc1-943c-93949e2b51bc" name="Changes" comment="Added a library to read data">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -89,12 +92,21 @@
       <option name="project" value="LOCAL" />
       <updated>1737058319421</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Added a library to read data">
+      <option name="closed" value="true" />
+      <created>1737059159466</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1737059159466</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Init" />
     <MESSAGE value="Added state api" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added state api" />
+    <MESSAGE value="Added a library to read data" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added a library to read data" />
   </component>
 </project>

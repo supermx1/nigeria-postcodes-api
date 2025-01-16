@@ -17,26 +17,28 @@ df = pl.read_csv(response.content)
 # Create postcode files
 for postal_code in df['Postal Code'].unique():
     group = df.filter(pl.col('Postal Code') == postal_code)
-    
-    locations = [
+
+    # Get all localities for this postal code
+    localities = [
         {
-            "locality": row["Locality"],
+            "name": row["Locality"],
             "coordinates": {
-                "latitude": float(row["Latitude"]),
-                "longitude": float(row["Longitude"])
+                "latitude": float(row["Latitude"]) if not pd.isna(row["Latitude"]) else None,
+                "longitude": float(row["Longitude"]) if not pd.isna(row["Longitude"]) else None
             },
-            "google_maps_link": row["Google Maps Link"]
+            "google_maps_link": row["Google Maps Link"] if "Google Maps Link" in row else None
         }
         for row in group.to_dicts()
     ]
-    
+
     json_data = {
         "state": group["State"][0],
         "lga": group["LGA"][0],
         "district": group["District/Ward"][0],
-        "locations": locations
+        "localities": localities
     }
-    
+
+    # Save postcode file without .json extension
     with open(f"www/postcode/{postal_code}", 'w', encoding='utf-8') as f:
         json.dump(json_data, f, indent=2, ensure_ascii=False)
 
@@ -49,40 +51,51 @@ state_data = {
 for state in df['State'].unique():
     # Add to states array
     state_data["states"].append(state)
-    
+
     state_group = df.filter(pl.col('State') == state)
     state_details = {
         "lgas": [],  # Array of LGA names
         "details": {}  # Nested LGA details
     }
-    
+
     for lga in state_group['LGA'].unique():
         # Add to LGAs array
         state_details["lgas"].append(lga)
-        
+
         lga_group = state_group.filter(pl.col('LGA') == lga)
         lga_details = {
             "districts": [],  # Array of district names
             "details": {}  # Nested district details
         }
-        
+
         for district in lga_group['District/Ward'].unique():
             # Add to districts array
             lga_details["districts"].append(district)
-            
+
             district_group = lga_group.filter(pl.col('District/Ward') == district)
+
+            # Get unique postal codes and localities for this district
             postal_codes = district_group['Postal Code'].unique().to_list()
-            
+            localities = district_group['Locality'].unique().to_list()
+
             # Add detailed district info
             lga_details["details"][district] = {
-                "postal_codes": postal_codes
+                "postal_codes": postal_codes,
+                "localities": localities
             }
-        
+
+        # Sort arrays
+        lga_details["districts"].sort()
         state_details["details"][lga] = lga_details
-    
+
+    # Sort arrays
+    state_details["lgas"].sort()
     state_data["details"][state] = state_details
 
-# Save state data
+# Sort states array
+state_data["states"].sort()
+
+# Save state data without .json extension
 with open(f"www/states", 'w', encoding='utf-8') as f:
     json.dump(state_data, f, indent=2, ensure_ascii=False)
 
