@@ -27,7 +27,8 @@ for postal_code in df['Postal Code'].unique():
             "coordinates": {
                 "latitude": float(row["Latitude"]),
                 "longitude": float(row["Longitude"])
-            }
+            },
+            "google_maps_link": row["Google Maps Link"]
         }
         for row in group.to_dicts()
     ]
