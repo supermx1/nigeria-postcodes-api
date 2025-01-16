@@ -4,10 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fef7315d-0145-4cc1-943c-93949e2b51bc" name="Changes" comment="Added a library to read data">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-    </list>
+    <list default="true" id="fef7315d-0145-4cc1-943c-93949e2b51bc" name="Changes" comment="fixed not locality" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -100,13 +97,30 @@
       <option name="project" value="LOCAL" />
       <updated>1737059159466</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="fixed not locality">
+      <option name="closed" value="true" />
+      <created>1737062801740</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1737062801740</updated>
+    </task>
+    <task id="LOCAL-00007" summary="fixed not locality">
+      <option name="closed" value="true" />
+      <created>1737063021206</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1737063021206</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Init" />
     <MESSAGE value="Added state api" />
     <MESSAGE value="Added a library to read data" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added a library to read data" />
+    <MESSAGE value="fixed not locality" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed not locality" />
   </component>
 </project>

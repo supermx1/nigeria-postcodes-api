@@ -4,74 +4,111 @@ import axios from 'axios';
 class NigeriaLocations {
     constructor(baseUrl = 'https://nigeria-postcodes.pages.dev') {
         this.baseUrl = baseUrl;
-        this.currentState = null;
-        this.currentLGA = null;
-        this.currentDistrict = null;
         this.data = null;
+        this.isReady = false;
+
+        // Fetch data immediately
+        this.initializeData();
     }
 
-    // Helper method to fetch and cache states data
-    async fetchStatesData() {
-        if (!this.data) {
+    async initializeData() {
+        try {
             const response = await axios.get(`${this.baseUrl}/states`);
             this.data = response.data;
+            this.isReady = true;
+        } catch (error) {
+            console.error('Failed to initialize Nigeria Locations data:', error);
+            throw error;
         }
-        return this.data;
     }
 
     // Individual functions
-    async getAllStates() {
-        const data = await this.fetchStatesData();
-        return data.states;
+    getAllStates() {
+        if (!this.isReady) throw new Error('Data not yet loaded');
+        return this.data.states.sort();
     }
 
-    async getLGAsInState(stateName) {
-        const data = await this.fetchStatesData();
-        return data.details[stateName]?.lgas || [];
+    getLGAsInState(stateName) {
+        if (!this.isReady) throw new Error('Data not yet loaded');
+        return (this.data.details[stateName]?.lgas || []).sort();
     }
 
-    async getDistrictsInLGA(stateName, lgaName) {
-        const data = await this.fetchStatesData();
-        return data.details[stateName]?.details[lgaName]?.districts || [];
+    getDistrictsInLGA(stateName, lgaName) {
+        if (!this.isReady) throw new Error('Data not yet loaded');
+        return (this.data.details[stateName]?.details[lgaName]?.districts || []).sort();
     }
 
-    async getPostalCodes(stateName, lgaName, districtName) {
-        const data = await this.fetchStatesData();
-        return data.details[stateName]?.details[lgaName]?.details[districtName]?.postal_codes || [];
+    getPostalCodes(stateName, lgaName, districtName) {
+        if (!this.isReady) throw new Error('Data not yet loaded');
+        return (this.data.details[stateName]?.details[lgaName]?.details[districtName]?.postal_codes || []).sort((a, b) => a - b);
+    }
+
+    getLocalities(stateName, lgaName, districtName) {
+        if (!this.isReady) throw new Error('Data not yet loaded');
+        return (this.data.details[stateName]?.details[lgaName]?.details[districtName]?.localities || []).sort();
     }
 
     async getPostcodeDetails(postcode) {
-        const response = await axios.get(`${this.baseUrl}/postcode/${postcode}`);
-        return response.data;
+        try {
+            const response = await axios.get(`${this.baseUrl}/postcode/${postcode}`);
+            return response.data;
+        } catch (error) {
+            console.error(`Failed to fetch details for postcode ${postcode}:`, error);
+            throw error;
+        }
     }
 
     // Chainable methods
     state(stateName) {
-        this.currentState = stateName;
-        return this;
+        return new ChainableQuery(this, stateName);
+    }
+
+    // Method to check if data is loaded
+    isInitialized() {
+        return this.isReady;
+    }
+
+    // Method to wait for initialization
+    async waitForInitialization() {
+        if (this.isReady) return;
+
+        // Poll until data is ready
+        while (!this.isReady) {
+            await new Promise(resolve => setTimeout(resolve, 100));
+        }
+    }
+}
+
+class ChainableQuery {
+    constructor(nigeriaLocations, stateName = null, lgaName = null, districtName = null) {
+        this.nigeriaLocations = nigeriaLocations;
+        this.stateName = stateName;
+        this.lgaName = lgaName;
+        this.districtName = districtName;
     }
 
     lga(lgaName) {
-        this.currentLGA = lgaName;
-        return this;
+        return new ChainableQuery(this.nigeriaLocations, this.stateName, lgaName);
     }
 
     district(districtName) {
-        this.currentDistrict = districtName;
-        return this;
+        return new ChainableQuery(this.nigeriaLocations, this.stateName, this.lgaName, districtName);
     }
 
-    async get() {
-        if (!this.currentState) {
-            return this.getAllStates();
+    get() {
+        if (!this.stateName) {
+            return this.nigeriaLocations.getAllStates();
         }
-        if (!this.currentLGA) {
-            return this.getLGAsInState(this.currentState);
+        if (!this.lgaName) {
+            return this.nigeriaLocations.getLGAsInState(this.stateName);
         }
-        if (!this.currentDistrict) {
-            return this.getDistrictsInLGA(this.currentState, this.currentLGA);
+        if (!this.districtName) {
+            return this.nigeriaLocations.getDistrictsInLGA(this.stateName, this.lgaName);
         }
-        return this.getPostalCodes(this.currentState, this.currentLGA, this.currentDistrict);
+        return {
+            postal_codes: this.nigeriaLocations.getPostalCodes(this.stateName, this.lgaName, this.districtName),
+            localities: this.nigeriaLocations.getLocalities(this.stateName, this.lgaName, this.districtName)
+        };
     }
 }
 
