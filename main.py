@@ -22,9 +22,9 @@ for postal_code in df['Postal Code'].unique():
     localities = [
         {
             "name": row["Locality"],
-            "coordinates": {
-                "latitude": float(row["Latitude"]) if not pd.isna(row["Latitude"]) else None,
-                "longitude": float(row["Longitude"]) if not pd.isna(row["Longitude"]) else None
+             "coordinates": {
+                "latitude": float(row["Latitude"]),
+                "longitude": float(row["Longitude"])
             },
             "google_maps_link": row["Google Maps Link"] if "Google Maps Link" in row else None
         }
